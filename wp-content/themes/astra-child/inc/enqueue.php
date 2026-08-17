@@ -27,10 +27,16 @@ function astra_child_enqueue_assets() {
         time()
     );
     wp_enqueue_style(
-        'astra-child-main',
+        'astra-child-course-single',
         $theme_uri . '/assets/css/courses.css',
         array( 'astra-child-style' ),
         filemtime( $theme_path . '/assets/css/course-single.css' )
+    );
+    wp_enqueue_style(
+        'astra-child-home',
+        $theme_uri . '/assets/css/home.css',
+        array( 'astra-child-style' ),
+        time()
     );
 
     wp_enqueue_style(

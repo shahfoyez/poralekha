@@ -1,7 +1,12 @@
-.site-content .ast-container {
-    display: block !important;
-    padding: 30px 0;
-}
+/*colors*/
+/*button: #0163CB;*/
+/*primary-text: #263C55;*/
+/*secondary-text: #0063BE;*/
+/*normal-text: #373737;*/
+/*muted: #627C89;*/
+
+
+
 .academy-courses__sidebar {
     background: #ffffff;
     padding: 15px;
@@ -13,6 +18,7 @@
 .academy-courses__header {
     margin: 0 0 30px;
 }
+
 @media(max-width: 1200px){
 
 }
