@@ -1,0 +1,375 @@
+/**
+ * StoreEngine — global admin stylesheet.
+ *
+ * Loaded on EVERY admin screen. This is the single file that replaces the old
+ * trio of separate requests (menu.css + notices.css + the icon-font stylesheet).
+ * Notice/menu icons are now inline SVG (see Notices::get_svg_icon), so the icon
+ * font is no longer pulled in here.
+ *
+ * Sections:
+ *   1. Admin menu chrome
+ *   2. Admin notices (card, grouping bell, buttons, license-SDK notice)
+ */
+
+/* =========================================================================
+   1. Admin menu chrome
+   ========================================================================= */
+#adminmenu li.toplevel_page_storeengine a.toplevel_page_storeengine > .wp-menu-image {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+#adminmenu li.toplevel_page_storeengine a.toplevel_page_storeengine > .wp-menu-image img {
+    max-width: 20px;
+    height: auto;
+    padding: 0 !important;
+}
+#adminmenu li.toplevel_page_storeengine ul li a,
+#adminmenu li.toplevel_page_storeengine .wp-submenu > li > a {
+	/*display: flex;*/
+	/*align-items: center;*/
+    padding: 7px 12px;
+}
+
+#adminmenu li.toplevel_page_storeengine ul.wp-submenu li {
+    clear: both;
+}
+#adminmenu li.toplevel_page_storeengine ul.wp-submenu li a[href*="admin.php?page=storeengine-addons"],
+#adminmenu li.toplevel_page_storeengine ul.wp-submenu li a[href^="admin.php?page=storeengine-addons"] {
+    color: #FDB022;
+}
+#adminmenu li.toplevel_page_storeengine ul.wp-submenu li.wp-first-item a[href^="admin.php?page=storeengine"]:after,
+#adminmenu li.toplevel_page_storeengine ul.wp-submenu li.wp-first-item a[href*="admin.php?page=storeengine"]:after,
+#adminmenu li.toplevel_page_storeengine ul.wp-submenu li a[href*="admin.php?page=storeengine-tools"]:after,
+#adminmenu li.toplevel_page_storeengine ul.wp-submenu li a[href^="admin.php?page=storeengine-tools"]:after {
+    border-bottom: 1px solid hsla(0,0%,100%,.2) !important;
+    display: block !important;
+    float: left;
+    margin: 15px -15px 7px;
+    content: "";
+    width: calc(100% + 26px) !important;
+}
+
+/* =========================================================================
+   2. Admin notices
+   ========================================================================= */
+:root {
+	--storeengine-primary-font: 'Poppins', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+	/*--storeengine-secondary-font: 'Inter', sans-serif;*/
+	--storeengine-primary-color: #008DFF;
+	--storeengine-secondary-color: #FF5000;
+	--storeengine-text-color: #101828;
+	--storeengine-placeholder-color: #8E949A;
+	--storeengine-border-color: #DDDEDF;
+	--storeengine-gray-color: #646C73;
+	--storeengine-background-color: #FAFAFA;
+	--storeengine-green-color: #00AD6B;
+	--storeengine-warning-color: #FDB022;
+	--storeengine-error-color: #FF4D4D;
+	--storeengine-white-color: #ffffff;
+	--storeengine-violet-color: #9A6EFF;
+}
+
+/* Inline-SVG icons carry the `storeengine-icon` class so the size/color rules
+   below keep working. Scoped to `svg` so it never affects the font-icon `<i>`
+   elements still used on StoreEngine's own admin screens. Sized in `em` off the
+   local font-size and tinted via currentColor. */
+svg.storeengine-icon {
+	display: block;
+	width: 1em;
+	height: 1em;
+}
+
+/* One card primitive for every notice: tinted severity icon on the left, body
+   in the middle, action button + dismiss pinned right. Severity is encoded by
+   the --base-color (set per notice-* class) driving the left rail + icon tint. */
+.storeengine-admin-notice {
+	--base-color: var(--storeengine-primary-color);
+	--icon-background: color-mix(in srgb, var(--base-color) 14%, transparent);
+	font-family: var(--storeengine-primary-font) sans-serif;
+	display: flex;
+	align-items: flex-start;
+	gap: 14px;
+	padding: 14px 16px;
+	background: #fff;
+	border: 1px solid var(--storeengine-border-color);
+	border-left: 3px solid var(--base-color);
+	border-radius: 10px;
+	box-sizing: border-box;
+	margin: 0 0 10px 0;
+	animation: storeengine-notice-in 0.25s ease both;
+}
+@keyframes storeengine-notice-in {
+	from { opacity: 0; transform: translateY(-6px); }
+	to   { opacity: 1; transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+	.storeengine-admin-notice { animation: none; }
+}
+.storeengine-admin-notice * {
+	font-family: var(--storeengine-primary-font) sans-serif;
+	box-sizing: border-box;
+}
+.storeengine-admin-notice.notice-info    { --base-color: var(--storeengine-primary-color); }
+.storeengine-admin-notice.notice-success { --base-color: var(--storeengine-green-color); }
+.storeengine-admin-notice.notice-warning { --base-color: var(--storeengine-warning-color); }
+.storeengine-admin-notice.notice-error   { --base-color: var(--storeengine-error-color); }
+
+/* Icon — tinted rounded square in the severity color. */
+.storeengine-admin-notice__icon {
+	flex: 0 0 38px;
+	width: 38px;
+	height: 38px;
+	border-radius: 10px;
+	background: var(--icon-background);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+.storeengine-admin-notice__icon .storeengine-icon {
+	font-size: 18px;
+	color: var(--base-color);
+}
+
+/* Body */
+.storeengine-admin-notice__body {
+	flex: 1 1 auto;
+	min-width: 0;
+	padding-top: 1px;
+}
+.storeengine-admin-notice__title,
+.storeengine-admin-notice__content h3 {
+	font-size: 0.9375rem;
+	font-weight: 700;
+	line-height: 1.35;
+	color: var(--storeengine-text-color);
+	margin: 0 0 2px 0;
+}
+.storeengine-admin-notice__content {
+	font-size: 0.8125rem;
+	line-height: 1.5;
+	color: var(--storeengine-subtitle-color);
+}
+.storeengine-admin-notice__content p {
+	font-weight: 400;
+	font-size: 0.8125rem;
+	line-height: 1.5;
+	color: var(--storeengine-subtitle-color);
+	margin: 0;
+	padding: 0;
+}
+.storeengine-admin-notice__content p:not(:first-child) { margin-top: 0.4em; }
+.storeengine-admin-notice__content ul { margin: 0.4em 0 0; }
+
+/* Actions — button + dismiss, right-aligned & vertically centered. */
+.storeengine-admin-notice__actions {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	flex-shrink: 0;
+	align-self: center;
+	margin-left: auto;
+}
+.storeengine-admin-notice__actions .storeengine-btn {
+	color: #fff;
+	font-size: 13px;
+	font-weight: 600;
+	line-height: 1;
+	padding: 9px 16px;
+	white-space: nowrap;
+	text-decoration: none !important;
+}
+.storeengine-admin-notice-close.notice-dismiss {
+	position: static;
+	width: 28px;
+	height: 28px;
+	padding: 0;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	border: 1px solid var(--storeengine-border-color);
+	border-radius: 8px;
+	background: transparent;
+	color: var(--storeengine-subtitle-color);
+	cursor: pointer;
+	transition: border-color 0.15s ease, color 0.15s ease, background 0.15s ease;
+}
+.storeengine-admin-notice-close.notice-dismiss:hover {
+	border-color: var(--base-color);
+	color: var(--storeengine-text-color);
+	background: var(--icon-background);
+}
+.storeengine-admin-notice-close.notice-dismiss::before { display: none; }
+.storeengine-admin-notice-close.notice-dismiss .storeengine-icon {
+	font-size: 15px;
+}
+.storeengine-admin-notice.notice-large {
+	padding: 18px 20px;
+	gap: 16px;
+}
+
+/**
+ * Button
+ */
+.storeengine-btn {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	position: relative;
+	font-size: 14px;
+	line-height: 20px;
+	font-weight: 500;
+	/* WordPress admin underlines every `a` (.wp-admin a, 0,1,1) which outranks
+	   this class, so force it off for our anchor-styled buttons. */
+	text-decoration: none !important;
+	background: #fff;
+	color: #444;
+	cursor: pointer;
+	text-align: center;
+	padding: 15px;
+	height: auto;
+	border-radius: 4px;
+	box-sizing: border-box;
+	margin: 0;
+	border: 0;
+	overflow: hidden !important;
+	transition: all 0.3s ease;
+	text-transform: capitalize;
+	white-space: nowrap;
+}
+
+.storeengine-btn::after {
+	content: "";
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	left: -100%;
+	top: 0;
+	background: rgba(0, 0, 0, 0.1);
+	transition: all 0.25s cubic-bezier(0.66, 0.36, 0.17, 0.91);
+}
+
+.storeengine-btn:hover::after {
+	left: 0;
+}
+
+.storeengine-btn:hover, .storeengine-btn:focus {
+	box-shadow: none !important;
+	outline: none !important;
+}
+
+.storeengine-btn--preset-blue {
+	background: var(--storeengine-primary-color);
+	color: #fff !important;
+}
+
+.storeengine-btn--md {
+	padding: 10px 16px;
+	font-size: 14px;
+}
+
+/**
+ * Handle special cases.
+ */
+.storeengine-admin-notice.options-permalink-php .storeengine-admin-notice__control .storeengine-btn {
+	display: none;
+}
+
+/**
+ * Grouping bell — collapses 3+ notices behind a single count-badged bar.
+ */
+.storeengine-notice-group {
+	background: #fff;
+	border: 1px solid var(--storeengine-border-color);
+	border-radius: 10px;
+	overflow: hidden;
+	margin: 0 0 10px 0;
+	box-sizing: border-box;
+}
+.storeengine-notice-group__head {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	width: 100%;
+	padding: 12px 16px;
+	background: var(--storeengine-background-color, #FAFAFA);
+	border: 0;
+	cursor: pointer;
+	text-align: left;
+	font: inherit;
+	color: var(--storeengine-text-color);
+}
+.storeengine-notice-group__head:hover { background: #f2f4f7; }
+.storeengine-notice-group__bell {
+	position: relative;
+	width: 32px;
+	height: 32px;
+	border-radius: 9px;
+	background: color-mix(in srgb, var(--storeengine-primary-color) 14%, transparent);
+	color: var(--storeengine-primary-color);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-shrink: 0;
+}
+.storeengine-notice-group__bell .storeengine-icon { font-size: 16px; }
+.storeengine-notice-group__count {
+	position: absolute;
+	top: -5px;
+	right: -5px;
+	min-width: 17px;
+	height: 17px;
+	padding: 0 4px;
+	border-radius: 999px;
+	background: var(--storeengine-error-color);
+	color: #fff;
+	font-size: 10px;
+	font-weight: 700;
+	line-height: 1;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border: 2px solid var(--storeengine-background-color, #FAFAFA);
+	box-sizing: border-box;
+}
+.storeengine-notice-group__label { flex: 1; font-size: 14px; font-weight: 600; }
+.storeengine-notice-group__chev {
+	font-size: 12.5px;
+	color: var(--storeengine-subtitle-color);
+	font-weight: 600;
+	white-space: nowrap;
+}
+.storeengine-notice-group__list {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	padding: 8px;
+}
+.storeengine-notice-group__list .storeengine-admin-notice { margin: 0; }
+
+/**
+ * Vendored license SDK notice — bring it into the same card look, including an
+ * icon (its markup ships none) drawn as a tinted ::before square.
+ */
+.se-sdk-license-notice {
+	display: flex !important;
+	align-items: center;
+	gap: 14px;
+	border-radius: 10px !important;
+	padding: 14px 16px !important;
+	border: 1px solid var(--storeengine-border-color) !important;
+	border-left: 3px solid var(--se-sdk-primary-color, var(--storeengine-primary-color)) !important;
+}
+.se-sdk-license-notice::before {
+	content: '';
+	flex: 0 0 38px;
+	width: 38px;
+	height: 38px;
+	border-radius: 10px;
+	background-color: color-mix(in srgb, var(--se-sdk-primary-color, var(--storeengine-primary-color)) 14%, transparent);
+	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%23008dff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cline x1='12' y1='16' x2='12' y2='12'/%3E%3Cline x1='12' y1='8' x2='12.01' y2='8'/%3E%3C/svg%3E");
+	background-repeat: no-repeat;
+	background-position: center;
+}
+.se-sdk-license-notice p { margin: 0 !important; }
+.se-sdk-license-notice a { text-decoration: none !important; }

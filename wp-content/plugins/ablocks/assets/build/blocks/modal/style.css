@@ -1,0 +1,47 @@
+.ablocks-modal-trigger-wrap .ablocks-modal-button{background-color:#1759d2;border:1px solid #1759d2;border-radius:5px;color:#fff;cursor:pointer;display:inline-flex;font-size:16px;padding:5px 15px;transition:.5s}.ablocks-modal-trigger-wrap .ablocks-modal-button:hover{background-color:#06307e;border-color:#06307e}.ablocks-block-modal---panel-wrap{background:rgba(0,0,0,.7);bottom:0;left:0;opacity:0;position:fixed;right:0;top:0;transition:opacity .5s,visibility .3s;visibility:hidden;z-index:99999}.ablocks-block--modal.ablocks-block-modal-position--left
+	.ablocks-block-modal---panel-wrap
+	.ablocks-modal-popup-content-wrap,.ablocks-block--modal.ablocks-block-modal-position--right
+	.ablocks-block-modal---panel-wrap
+	.ablocks-modal-popup-content-wrap,.ablocks-block--modal.ablocks-block-modal-position--top
+	.ablocks-block-modal---panel-wrap
+	.ablocks-modal-popup-content-wrap{min-height:100%;top:0;transform:none;width:400px}.ablocks-block--modal.ablocks-block-modal-position--left
+	.ablocks-block-modal---panel-wrap
+	.ablocks-modal-popup-content-wrap{left:-100%}.ablocks-block--modal.ablocks-block-modal-panel-visibility--open.ablocks-block-modal-position--left
+	.ablocks-block-modal---panel-wrap
+	.ablocks-modal-popup-content-wrap{left:0}.ablocks-block--modal.ablocks-block-modal-position--right
+	.ablocks-block-modal---panel-wrap
+	.ablocks-modal-popup-content-wrap{right:-100%}.ablocks-block--modal.ablocks-block-modal-panel-visibility--open.ablocks-block-modal-position--right
+	.ablocks-block-modal---panel-wrap
+	.ablocks-modal-popup-content-wrap{right:0}.ablocks-block--modal.ablocks-block-modal-position--right
+	.ablocks-block-modal---panel-wrap
+	.ablocks-modal-popup-content-wrap,.ablocks-block--modal.ablocks-block-modal-position--top
+	.ablocks-block-modal---panel-wrap
+	.ablocks-modal-popup-content-wrap{left:unset}.ablocks-block--modal.ablocks-block-modal-position--right
+	.ablocks-block-modal---panel-wrap
+	.ablocks-modal-popup-close,.ablocks-block--modal.ablocks-block-modal-position--top
+	.ablocks-block-modal---panel-wrap
+	.ablocks-modal-popup-close{left:-5px;transform:translateX(-100%)}.ablocks-block--modal.ablocks-block-modal-position--top
+	.ablocks-block-modal---panel-wrap
+	.ablocks-modal-popup-content-wrap{right:0;top:-100%}.ablocks-block--modal.ablocks-block-modal-panel-visibility--open.ablocks-block-modal-position--top
+	.ablocks-block-modal---panel-wrap
+	.ablocks-modal-popup-content-wrap{top:0}.ablocks-block--modal.ablocks-block-modal-position--block
+	.ablocks-block-modal---panel-wrap{position:absolute;top:100%;width:600px;z-index:999999}.ablocks-block--modal.ablocks-block-modal-position--block
+	.ablocks-block-modal---panel-wrap
+	.ablocks-modal-popup-content-wrap{display:none;left:0;transform:none}.ablocks-block--modal.ablocks-block-modal-panel-visibility--open.ablocks-block-modal-position--block
+	.ablocks-block-modal---panel-wrap
+	.ablocks-modal-popup-content-wrap{display:block}.ablocks-block--modal.ablocks-block-modal-position--block
+	.ablocks-block-modal---panel-wrap
+	.ablocks-modal-popup-close{left:calc(100% + 5px);transform:none}.ablocks-block--modal.ablocks-block-modal-panel-direction--right.ablocks-block-modal-position--block
+	.ablocks-block-modal---panel-wrap
+	.ablocks-modal-popup-close{left:unset;right:calc(100% + 5px)}.ablocks-block--modal.ablocks-block-modal-panel-direction--left.ablocks-block-modal-position--block
+	.ablocks-block-modal---panel-wrap{left:unset;right:100%}.ablocks-block--modal.ablocks-block-modal-panel-direction--right.ablocks-block-modal-position--block
+	.ablocks-block-modal---panel-wrap{left:100%}.ablocks-block--modal.ablocks-block-modal-panel-direction--top.ablocks-block-modal-position--block
+	.ablocks-block-modal---panel-wrap,.ablocks-block--modal.ablocks-block-modal-panel-direction--top.ablocks-block-modal-position--block
+	.ablocks-block-modal---panel-wrap
+	.ablocks-modal-popup-content-wrap{bottom:100%;top:unset}.ablocks-block--modal.ablocks-block-modal-panel-direction--bottom.ablocks-block-modal-position--block
+	.ablocks-block-modal---panel-wrap
+	.ablocks-modal-popup-content-wrap{bottom:unset;top:100%}.ablocks-block--modal.ablocks-block-modal-position--popup.ablocks-block-modal-panel-popup-on-top
+	.ablocks-block-modal---panel-wrap
+	.ablocks-modal-popup-content-wrap{top:0;transform:translate(-50%)}.ablocks-modal-trigger-wrap{cursor:pointer}.ablocks-block--modal.ablocks-block-modal-panel-visibility--open
+	.ablocks-block-modal---panel-wrap{opacity:1!important;visibility:visible!important}.ablocks-block-modal---panel-wrap .ablocks-modal-popup-content-wrap{background-color:#fff;border:1px solid #ddd;box-sizing:border-box;display:flex;left:50%;max-width:92vw;min-height:400px;padding:40px 20px 20px;position:absolute;top:50%;transform:translate(-50%,-50%);transition:1s;width:600px}.ablocks-block-modal---panel-wrap .ablocks-modal-popup--content{overflow:hidden;width:100%}.ablocks-block-modal---panel-wrap .ablocks-modal-popup-close{align-items:center;background-color:#fff;border:1px solid #eee;border-radius:50%;cursor:pointer;display:flex;height:25px;justify-content:center;position:absolute;right:12px;top:12px;width:25px}.ablocks-block-modal---panel-wrap .ablocks-modal-popup-close svg{fill:#aaa;height:12px;width:12px}.ablocks-block--modal.ablocks-block-modal-position--block
+	.ablocks-block--modal-panel{position:static}

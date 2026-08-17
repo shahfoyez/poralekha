@@ -1,0 +1,88 @@
+<?php
+namespace Academy\Admin;
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
+use \Academy\Helper;
+
+class Setup {
+	const PAGE_ID = 'academy-setup';
+	private $assets;
+	public static function init() {
+		$self = new self();
+		$self->assets = new \Academy\Assets();
+		if ( $self->is_current() ) {
+			add_action( 'admin_init', [ $self, 'admin_init' ], 0 );
+		}
+		add_action( 'admin_menu', [ $self, 'register_admin_menu' ] );
+	}
+
+	public function register_admin_menu() {
+		add_submenu_page(
+			'options-writing.php', // make it hidden
+			__( 'Academy Setup', 'academy' ),
+			__( 'Academy Setup', 'academy' ),
+			'manage_options',
+			self::PAGE_ID
+		);
+	}
+
+
+	public function admin_init() {
+		do_action( 'academy/admin/setup/init', $this );
+
+		$this->enqueue_assets();
+
+		// Setup default heartbeat options
+		// TODO: Enable heartbeat.
+		add_filter( 'heartbeat_settings', function( $settings ) {
+			$settings['interval'] = 15;
+			return $settings;
+		} );
+
+		$this->render();
+		die;
+	}
+
+	public function is_current() {
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		return ( ! empty( $_GET['page'] ) && self::PAGE_ID === $_GET['page'] );
+	}
+
+	public function get_setup_scripts_data() {
+		return apply_filters( 'academy/admin/setup_scripts_data', array_merge( [
+			'is_ablocks_active' => Helper::is_plugin_active( 'ablocks/ablocks.php' ),
+			'is_storeengine_active' => Helper::is_plugin_active( 'storeengine/storeengine.php' )
+		], $this->assets->get_scripts_data() ) );
+	}
+
+
+	private function enqueue_assets() {
+		$dependencies = include ACADEMY_ASSETS_DIR_PATH . sprintf( 'build/setup.%s.asset.php', ACADEMY_VERSION );
+		$this->assets->load_web_font_and_icon();
+		if ( Helper::is_plugin_active( 'ablocks/ablocks.php' ) ) {
+			$Assets = new \ABlocks\Assets();
+			$Assets->demo_template_importer_scripts();
+		}
+		wp_enqueue_style( 'academy-admin-style', ACADEMY_ASSETS_URI . 'build/setup.css', array( 'wp-components' ), $dependencies['version'], 'all' );
+		wp_enqueue_script(
+			'academy-setup-scripts',
+			ACADEMY_ASSETS_URI . sprintf( 'build/setup.%s.js', ACADEMY_VERSION ),
+			$dependencies['dependencies'],
+			$dependencies['version'],
+			true
+		);
+
+		wp_localize_script( 'academy-setup-scripts', 'AcademyGlobal', array_merge( $this->get_setup_scripts_data(), array( 'admin_url'  => admin_url() ) ) );
+		wp_set_script_translations( 'academy-setup-scripts', 'academy', ACADEMY_ROOT_DIR_PATH . 'languages/' );
+		// Enqueue emoji styles to prevent deprecation notices
+		wp_enqueue_emoji_styles();
+
+	}
+
+	private function render() {
+		require ACADEMY_ROOT_DIR_PATH . 'includes/admin/views/setup.php';
+	}
+}

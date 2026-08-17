@@ -1,0 +1,36 @@
+{
+    "$schema": "https://schemas.wp.org/trunk/block.json",
+    "apiVersion": 3,
+    "name": "ablocks/tabs-child",
+    "version": "0.1.0",
+    "title": "Tabs Child",
+    "category": "ablocks",
+    "description": "Design stylish call-to-action tabs-child.",
+    "example": [],
+    "parent": [
+        "ablocks/tabs"
+    ],
+    "supports": {
+        "html": true,
+        "anchor": true
+    },
+    "textdomain": "ablocks",
+    "editorStyle": [
+        "ablocks-animate-style",
+        "ablocks-common-style",
+        "file:./style.css"
+    ],
+    "editorScript": [
+        "ablocks-common-script"
+    ],
+    "attributes": {
+        "block_id": {
+            "type": "string",
+            "default": ""
+        },
+        "tabId": {
+            "type": "number",
+            "default": 0
+        }
+    }
+}

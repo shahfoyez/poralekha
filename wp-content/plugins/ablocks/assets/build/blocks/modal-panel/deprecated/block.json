@@ -1,0 +1,28 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "ablocks/modal-panel",
+  "version": "0.1.0",
+  "title": "Modal Panel",
+  "category": "ablocks",
+  "description": "Modal block panel element",
+  "example": [],
+  "parent": [
+    "ablocks/modal"
+  ],
+  "supports": {
+    "html": false,
+    "anchor": false
+  },
+  "textdomain": "ablocks",
+  "attributes": {
+    "block_id": {
+      "type": "string",
+      "default": ""
+    },
+    "noCloseButton": {
+      "type": "boolean",
+      "default": false
+    }
+  }
+}

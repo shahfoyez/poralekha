@@ -1,0 +1,46 @@
+<!-- wp:template-part {"slug":"header"} /-->
+
+<!-- wp:group {"layout":{"type":"constrained","contentSize":"1140px"}} -->
+<div class="wp-block-group"><!-- wp:shortcode -->
+	[storeengine_single_product_cart_notice]
+	<!-- /wp:shortcode -->
+
+	<!-- Media column is deliberately wider than the summary: the gallery is the
+	     thing shoppers scan first, and the summary is mostly short lines that
+	     don't need half the page. Top-aligned so the summary starts level with
+	     the image instead of floating in the middle of a tall gallery. -->
+	<!-- wp:columns {"verticalAlignment":"top"} -->
+	<div class="wp-block-columns are-vertically-aligned-top"><!-- wp:column {"verticalAlignment":"top","width":"58%"} -->
+		<div class="wp-block-column is-vertically-aligned-top" style="flex-basis:58%"><!-- wp:shortcode -->
+			[storeengine_single_product_gallery]
+			<!-- /wp:shortcode --></div>
+		<!-- /wp:column -->
+
+		<!-- wp:column {"verticalAlignment":"top","width":"42%"} -->
+		<div class="wp-block-column is-vertically-aligned-top" style="flex-basis:42%"><!-- wp:shortcode -->
+			[storeengine_single_product_summary]
+			<!-- /wp:shortcode --></div>
+		<!-- /wp:column --></div>
+	<!-- /wp:columns -->
+
+	<!-- wp:shortcode -->
+	[storeengine_single_product_description]
+	<!-- /wp:shortcode -->
+
+	<!-- Product comments render through the StoreEngine shortcode so the
+	     "Enable Comments" setting actually gates them. A raw core wp:comments
+	     block would ignore the setting and always show. -->
+	<!-- wp:shortcode -->
+	[storeengine_single_product_comments]
+	<!-- /wp:shortcode -->
+
+	<!-- wp:shortcode -->
+	[storeengine_single_product_faq]
+	<!-- /wp:shortcode -->
+
+	<!-- wp:shortcode -->
+	[storeengine_single_product_reviews]
+	<!-- /wp:shortcode --></div>
+<!-- /wp:group -->
+
+<!-- wp:template-part {"slug":"footer"} /-->

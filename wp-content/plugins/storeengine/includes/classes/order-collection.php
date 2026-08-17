@@ -1,0 +1,135 @@
+<?php
+
+namespace StoreEngine\Classes;
+
+use StoreEngine\Classes\Exceptions\StoreEngineInvalidArgumentException;
+use StoreEngine\Utils\Helper;
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
+/**
+ * @method array<Order|Refund> get_results()
+ * @method Order|Refund next_result()
+ */
+class OrderCollection extends AbstractCollection {
+	protected string $table = 'storeengine_orders';
+
+	protected string $object_type = 'order';
+
+	protected string $meta_type = 'order';
+
+	protected string $primary_key = 'id';
+
+	protected string $parent_key = 'parent_order_id';
+
+	protected string $returnType = Order::class; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.PropertyNotSnakeCase
+
+	/**
+	 * @param array|string $query
+	 * @param ?string $type Deprecated, use where with type column (key). Optional. order type. Possible values are order, refund, subscription etc.
+	 *
+	 * @throws StoreEngineInvalidArgumentException
+	 */
+	public function __construct( $query = '', string $type = null ) {
+		if ( $type ) {
+			_deprecated_argument( __METHOD__, '1.5.2', esc_html__( 'Usage of order type argument is deprecated. Use where query param with type column (key).', 'storeengine' ) );
+			$this->must_where = [
+				'relation' => 'AND',
+				[
+					'key'     => 'type',
+					'value'   => $type,
+					'compare' => '=',
+				],
+			];
+		}
+
+		parent::__construct( $query );
+	}
+
+	protected function get_return_type( $result ) {
+		if ( isset( $result->type ) ) {
+			return Helper::get_order_type_class( $result->type );
+		}
+
+		if ( is_numeric( $result ) ) {
+			return Helper::get_class_name_for_order_id( absint( $result ) );
+		}
+
+		return false;
+	}
+
+	/**
+	 * Get purchase history for customer.
+	 *
+	 * @param int $customer_id
+	 *
+	 * @return array
+	 */
+	public static function get_purchase_history( int $customer_id ): array {
+		global $wpdb;
+		// @FIXME sort & limit to return last item.
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		$results = $wpdb->get_results(
+			$wpdb->prepare(
+				"
+				SELECT product_id, SUM(product_qty) as total_qty
+				FROM {$wpdb->prefix}storeengine_order_product_lookup
+				WHERE order_id IN (
+					SELECT id
+					FROM {$wpdb->prefix}storeengine_orders
+					WHERE customer_id = %d
+             	)
+				GROUP BY product_id
+				",
+				$customer_id
+			),
+			ARRAY_A
+		);
+		// phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+
+		$products = [];
+		foreach ( $results as $product ) {
+			$products[] = [
+				'product_id'     => $product['product_id'],
+				'product_name'   => get_the_title( $product['product_id'] ),
+				'total_quantity' => $product['total_qty'],
+			];
+		}
+
+		return $products;
+	}
+
+	/**
+	 * Get customer's total spent based on existing order data.
+	 *
+	 * @param int $customer_id
+	 *
+	 * @return float
+	 */
+	public static function get_total_spent( int $customer_id ): float {
+		global $wpdb;
+
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		return (float) $wpdb->get_var(
+			$wpdb->prepare(
+				"
+			SELECT SUM(
+				CASE
+					WHEN status = 'completed' THEN total_amount
+			        WHEN status = 'refunded' THEN -total_amount
+			        ELSE 0
+			    END
+		       ) AS total_spent
+			FROM {$wpdb->prefix}storeengine_orders
+			WHERE customer_id = %d;
+			",
+				$customer_id
+			)
+		);
+		// phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+	}
+}
+
+// End of file order-collection.php.

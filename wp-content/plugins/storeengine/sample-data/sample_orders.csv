@@ -1,0 +1,36 @@
+"Order Key","Order Status","Customer Email","Order Currency","Order Subtotal","Order Total","Order Tax","Date Created (GMT)","Date Updated (GMT)","Date Placed (GMT)","Payment Method (name)","Payment Method (title)","Transaction ID","IP Address","User Agent","Customer Note","Cart Hash","Meta Data"
+se_order_cjq0VKtaxImBi,completed,user@test.com,USD,20,20.00,0,"2025-08-10 10:07:56 AM","2025-08-10 10:08:15 AM","2025-08-10 10:08:11 AM",stripe,"Debit/Credit Card",pi_3RuWAfDtPzefNxCK15JspKt9,127.0.0.1,"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",,58b0166b-0851-4a9a-8514-70e86631eef9,_stripe_intent_id:pi_3RuWAfDtPzefNxCK15JspKt9|is_vat_exempt:|_stripe_fee:0.88|_stripe_net:19.12|_stripe_response_id:pi_3RuWAfDtPzefNxCK15JspKt9|_stripe_currency:usd|_stripe_payment_method:card|_stripe_customer_id:cus_SqCZCg1p6RKe7Z|_stripe_source_id:pm_1RuWAdDtPzefNxCKikc9xdn8|_stripe_charge_captured:yes
+
+"Order Item Name","Product Slug","Product Type",Price,Quantity,Subtotal,"Subtotal (Tax)",Total,"Total (Tax)","Product Shipping Type","Is Autocomplete","Price name","Price type","Setup Fee","Setup Fee name","Setup Fee price","Setup Fee type",Trial,"Trial days",Expire,"Expire days","Payment duration","Payment duration type","Meta Data"
+"Level &#8211; 1",level-1,,20,1,20,0,20,0,digital,1,subscription,subscription,,,0,,,0,,0,1,week,
+
+"Billing First Name","Billing Last Name","Billing Company","Billing Address 1","Billing Address 2","Billing City","Billing State","Billing Postcode","Billing Country","Billing Email","Billing Phone"
+John,Doe,,"1/2 street address",,dhaka,BD-13,1234,BD,user@test.com,339956486989567
+
+"Shipping First Name","Shipping Last Name","Shipping Company","Shipping Address 1","Shipping Address 2","Shipping City","Shipping State","Shipping Postcode","Shipping Country","Shipping Email","Shipping Phone"
+John,Doe,,"1/2 street address",,dhaka,BD-13,1234,BD,user@test.com,339956486989567
+
+"# Order Entity"
+se_order_EcDFYPoqfFz0M,completed,user@test.com,USD,165,165.00,0,"2025-08-10 10:02:34 AM","2025-08-10 10:07:11 AM","2025-08-10 10:06:30 AM",check,"Check payments",,127.0.0.1,"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",,58b0166b-0851-4a9a-8514-70e86631eef9,is_vat_exempt:
+
+"Order Item Name","Product Slug","Product Type",Price,Quantity,Subtotal,"Subtotal (Tax)",Total,"Total (Tax)","Product Shipping Type","Is Autocomplete","Price name","Price type","Setup Fee","Setup Fee name","Setup Fee price","Setup Fee type",Trial,"Trial days",Expire,"Expire days","Payment duration","Payment duration type","Meta Data"
+Cap,cap,simple,120,1,120,0,120,0,physical,,Onetime,onetime,,,0,fee,,7,,30,1,month,
+Hoodie,hoodie,variable,45,1,45,0,45,0,physical,,Onetime,onetime,,,0,fee,,7,,30,1,month,se_pa_color:blue|se_pa_logo:yes
+
+"Billing First Name","Billing Last Name","Billing Company","Billing Address 1","Billing Address 2","Billing City","Billing State","Billing Postcode","Billing Country","Billing Email","Billing Phone"
+John,Doe,,"1/2 street address",,dhaka,BD-13,1234,BD,user@test.com,339956486989567
+
+"Shipping First Name","Shipping Last Name","Shipping Company","Shipping Address 1","Shipping Address 2","Shipping City","Shipping State","Shipping Postcode","Shipping Country","Shipping Email","Shipping Phone"
+John,Doe,,"1/2 street address",,dhaka,BD-13,1234,BD,user@test.com,339956486989567
+
+"# Order Entity"
+se_order_p0eYxG0o7PxLk,processing,user@test.com,USD,55,55.00,0,"2025-08-10 10:00:13 AM","2025-08-10 10:01:53 AM","2025-08-10 10:01:53 AM",check,"Check payments",,127.0.0.1,"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",,58b0166b-0851-4a9a-8514-70e86631eef9,is_vat_exempt:
+
+"Order Item Name","Product Slug","Product Type",Price,Quantity,Subtotal,"Subtotal (Tax)",Total,"Total (Tax)","Product Shipping Type","Is Autocomplete","Price name","Price type","Setup Fee","Setup Fee name","Setup Fee price","Setup Fee type",Trial,"Trial days",Expire,"Expire days","Payment duration","Payment duration type","Meta Data"
+Album,album,simple,55,1,55,0,55,0,digital,1,Onetime,onetime,,,0,fee,,7,,30,1,month,
+
+"Billing First Name","Billing Last Name","Billing Company","Billing Address 1","Billing Address 2","Billing City","Billing State","Billing Postcode","Billing Country","Billing Email","Billing Phone"
+John,Doe,,"1/2 street address",,dhaka,BD-13,1234,BD,user@test.com,339956486989567
+
+"Shipping First Name","Shipping Last Name","Shipping Company","Shipping Address 1","Shipping Address 2","Shipping City","Shipping State","Shipping Postcode","Shipping Country","Shipping Email","Shipping Phone"
+John,Doe,,"1/2 street address",,dhaka,BD-13,1234,BD,user@test.com,339956486989567

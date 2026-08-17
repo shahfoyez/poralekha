@@ -1,0 +1,11 @@
+"Subscription Key","Subscription Status","Customer Email","Subscription Currency","Subscription Subtotal","Subscription Total","Subscription Tax","Date Created (GMT)","Date Updated (GMT)","Date Placed (GMT)","Payment Method (name)","Payment Method (title)","IP Address","User Agent","Customer Note","Cart Hash","Parent Order Key","Child Order Keys","Start Date (GMT)","Has Trial","Trial Days","Trial End Date (GMT)","Next Payment Date (GMT)","Meta Data"
+se_order_zRBFlsv67ebMk,active,user@test.com,USD,20,20.00,0,"2025-08-10 10:08:11 AM","2025-08-10 10:08:16 AM","2025-08-10 10:14:13 AM",stripe,"Debit/Credit Card",127.0.0.1,"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",,58b0166b-0851-4a9a-8514-70e86631eef9,se_order_cjq0VKtaxImBi,,"2025-08-10 10:08:11 AM",,0,,"2025-08-17 10:08:11 AM",_stripe_customer_id:cus_SqCZCg1p6RKe7Z|_stripe_source_id:pm_1RuWAdDtPzefNxCKikc9xdn8|_stripe_payment_method:card
+
+"Item Name","Product Slug","Product Type",Price,Quantity,Subtotal,"Subtotal (Tax)",Total,"Total (Tax)","Product Shipping Type","Is Autocomplete","Price name","Price type","Setup Fee","Setup Fee name","Setup Fee price","Setup Fee type",Trial,"Trial days",Expire,"Expire days","Payment duration","Payment duration type","Meta Data"
+"Level &#8211; 1",level-1,,20,1,20,0,20,0,digital,1,subscription,subscription,,,0,,,0,,0,1,week,
+
+"Billing First Name","Billing Last Name","Billing Company","Billing Address 1","Billing Address 2","Billing City","Billing State","Billing Postcode","Billing Country","Billing Email","Billing Phone"
+John,Doe,,"1/2 street address",,dhaka,BD-13,1234,BD,user@test.com,339956486989567
+
+"Shipping First Name","Shipping Last Name","Shipping Company","Shipping Address 1","Shipping Address 2","Shipping City","Shipping State","Shipping Postcode","Shipping Country","Shipping Email","Shipping Phone"
+John,Doe,,"1/2 street address",,dhaka,BD-13,1234,BD,user@test.com,339956486989567

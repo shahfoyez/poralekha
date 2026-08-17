@@ -1,0 +1,618 @@
+/**
+ * StoreEngine Multi-Vendor — frontend dashboard styling.
+ */
+
+.storeengine-vendor-overview h2,
+.storeengine-vendor-products h2,
+.storeengine-vendor-orders h2,
+.storeengine-vendor-profile h2,
+.storeengine-vendor-product-edit h2,
+.storeengine-vendor-pending h2,
+.storeengine-vendor-pro-overview h2,
+.storeengine-vendor-payouts h2 {
+	margin: 0 0 16px;
+	font-size: 22px;
+}
+
+.storeengine-vendor-overview__cards,
+.storeengine-vendor-payouts__summary,
+.storeengine-vendor-analytics__cards {
+	margin-bottom: 24px;
+}
+
+.storeengine-vendor-analytics__cards {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+	gap: 16px;
+}
+
+.storeengine-stat-card {
+	background: #ffffff;
+	border: 1px solid #e5e7eb;
+	border-radius: 8px;
+	padding: 16px 18px;
+	box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+}
+
+.storeengine-stat-card__label {
+	font-size: 12px;
+	text-transform: uppercase;
+	letter-spacing: 0.04em;
+	color: #6b7280;
+	margin-bottom: 8px;
+}
+
+.storeengine-stat-card__value {
+	font-size: 24px;
+	font-weight: 600;
+	color: #0f172a;
+	line-height: 1.2;
+}
+
+.storeengine-vendor-upsell {
+	background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+	border: 1px solid #f59e0b;
+}
+
+.storeengine-vendor-upsell h3 {
+	margin: 0 0 8px;
+	color: #78350f;
+}
+
+.storeengine-vendor-upsell p {
+	margin: 0;
+	color: #78350f;
+}
+
+.storeengine-table-wrap {
+	overflow-x: auto;
+}
+
+.storeengine-table {
+	width: 100%;
+	border: 1px solid #e5e7eb;
+	border-radius: 8px;
+	border-collapse: separate;
+	border-spacing: 0;
+	overflow: hidden;
+	background: #fff;
+}
+
+.storeengine-table th,
+.storeengine-table td {
+	padding: 12px 16px;
+	border-bottom: 1px solid #f1f3f5;
+	text-align: left;
+	vertical-align: middle;
+}
+
+.storeengine-table thead th {
+	background: #f9fafb;
+	font-size: 12px;
+	font-weight: 600;
+	text-transform: uppercase;
+	letter-spacing: 0.04em;
+	color: #6b7280;
+	border-bottom: 1px solid #e5e7eb;
+}
+
+.storeengine-table tbody tr:last-child td {
+	border-bottom: 0;
+}
+
+.storeengine-table tbody tr:hover td {
+	background: #f9fafb;
+}
+
+/* Right-align every column after the first (qty / money columns). */
+.storeengine-table--numeric th:not(:first-child),
+.storeengine-table--numeric td:not(:first-child) {
+	text-align: right;
+	font-variant-numeric: tabular-nums;
+	white-space: nowrap;
+}
+
+.storeengine-vendor-analytics__section {
+	margin-top: 24px;
+}
+
+.storeengine-vendor-analytics__section h3 {
+	margin: 0 0 12px;
+	font-size: 16px;
+}
+
+.storeengine-vendor-analytics__filters {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: flex-end;
+	gap: 12px;
+	margin-bottom: 24px;
+}
+
+.storeengine-vendor-analytics__field {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+	font-size: 13px;
+	color: #6b7280;
+}
+
+.storeengine-vendor-analytics__field input[type="date"] {
+	padding: 8px 10px;
+	border: 1px solid #d1d5db;
+	border-radius: 6px;
+	background: #fff;
+	color: #0f172a;
+	font-size: 14px;
+	line-height: 1.2;
+}
+
+.storeengine-vendor-analytics__field input[type="date"]:focus {
+	border-color: #2563eb;
+	outline: none;
+	box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+/* Apply button sits on the same baseline as the date inputs. */
+.storeengine-vendor-analytics__filters .storeengine-btn {
+	align-self: flex-end;
+}
+
+.storeengine-vendor-signup__form .storeengine-form-row {
+	margin-bottom: 16px;
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+}
+
+.storeengine-vendor-signup__form .storeengine-form-row input {
+	padding: 8px 10px;
+	border: 1px solid #d1d5db;
+	border-radius: 4px;
+}
+
+/* ── Vendor store-profile form ─────────────────────────────────────── */
+.storeengine-vendor-page-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	flex-wrap: wrap;
+	gap: 12px;
+	margin-bottom: 16px;
+}
+
+.storeengine-vendor-profile .storeengine-edit-account-form {
+	max-width: 640px;
+}
+
+.storeengine-vendor-profile .storeengine-form-group {
+	margin-bottom: 18px;
+}
+
+.storeengine-vendor-profile .storeengine-form__inner {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+}
+
+.storeengine-vendor-profile .storeengine-form__inner > label {
+	font-size: 14px;
+	font-weight: 600;
+	color: #0f172a;
+}
+
+.storeengine-vendor-profile .storeengine-form__inner input[type="text"],
+.storeengine-vendor-profile .storeengine-form__inner input[type="email"],
+.storeengine-vendor-profile .storeengine-form__inner input[type="tel"],
+.storeengine-vendor-profile .storeengine-form__inner textarea {
+	width: 100%;
+	box-sizing: border-box;
+	padding: 10px 12px;
+	border: 1px solid #d1d5db;
+	border-radius: 6px;
+	background: #fff;
+	color: #0f172a;
+	font-size: 14px;
+	line-height: 1.4;
+	transition: border-color 120ms ease, box-shadow 120ms ease;
+}
+
+.storeengine-vendor-profile .storeengine-form__inner textarea {
+	min-height: 90px;
+	resize: vertical;
+}
+
+.storeengine-vendor-profile .storeengine-form__inner input:focus,
+.storeengine-vendor-profile .storeengine-form__inner textarea:focus {
+	border-color: #2563eb;
+	outline: none;
+	box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+.storeengine-vendor-profile .storeengine-form__inner input:disabled {
+	background: #f3f4f6;
+	color: #9ca3af;
+	cursor: not-allowed;
+}
+
+.storeengine-vendor-profile .storeengine-form__hint {
+	font-size: 12px;
+	color: #6b7280;
+}
+
+/* Business-type radios sit inline, not stacked like the text fields. */
+.storeengine-vendor-profile .storeengine-radio {
+	flex-direction: row;
+	align-items: center;
+	gap: 6px;
+	font-size: 14px;
+	font-weight: 400;
+	color: #374151;
+}
+
+.storeengine-vendor-profile .storeengine-radio input {
+	width: auto;
+	margin: 0;
+}
+
+.storeengine-notice--info {
+	background: #eff6ff;
+	color: #1e40af;
+	border: 1px solid #93c5fd;
+}
+
+.storeengine-notice {
+	padding: 12px 16px;
+	border-radius: 6px;
+	margin-bottom: 16px;
+}
+
+.storeengine-notice--success {
+	background: #ecfdf5;
+	color: #065f46;
+	border: 1px solid #10b981;
+}
+
+.storeengine-notice--error {
+	background: #fef2f2;
+	color: #991b1b;
+	border: 1px solid #ef4444;
+}
+
+/* Public vendor store page */
+.storeengine-vendor-store {
+	padding: 32px 0 48px;
+}
+
+.storeengine-vendor-store__header {
+	display: flex;
+	gap: 20px;
+	align-items: flex-start;
+	padding: 24px;
+	margin-bottom: 28px;
+	background: #ffffff;
+	border: 1px solid #e5e7eb;
+	border-radius: 12px;
+	box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+}
+
+.storeengine-vendor-store__avatar img {
+	border-radius: 50%;
+	display: block;
+	width: 96px;
+	height: 96px;
+	object-fit: cover;
+}
+
+.storeengine-vendor-store__meta {
+	flex: 1;
+	min-width: 0;
+}
+
+.storeengine-vendor-store__title {
+	margin: 0 0 6px;
+	font-size: 26px;
+	color: #0f172a;
+}
+
+.storeengine-vendor-store__slug code {
+	background: #f1f5f9;
+	color: #475569;
+	padding: 2px 8px;
+	border-radius: 4px;
+	font-size: 13px;
+}
+
+.storeengine-vendor-store__joined {
+	margin: 6px 0 0;
+	font-size: 13px;
+	color: #64748b;
+}
+
+.storeengine-vendor-store__bio {
+	margin-top: 10px;
+	color: #334155;
+	font-size: 14px;
+	line-height: 1.6;
+}
+
+@media (max-width: 600px) {
+	.storeengine-vendor-store__header {
+		flex-direction: column;
+		align-items: center;
+		text-align: center;
+	}
+}
+
+/* Vendor badges */
+.storeengine-vendor-badge {
+	display: inline-block;
+	margin-left: 8px;
+	padding: 3px 10px;
+	border-radius: 999px;
+	color: #ffffff;
+	font-size: 12px;
+	font-weight: 600;
+	letter-spacing: 0.02em;
+	vertical-align: middle;
+}
+
+/* Separator styling lives in core SCSS (dashboard-sidebar.scss) so the
+ * auto-injected group headers (My orders / Earnings / Account) render
+ * correctly whether or not multi-vendor is active. */
+
+/* Frontend payment-method form rows */
+.storeengine-vendor-pm .storeengine-form-row,
+.storeengine-vendor-withdraw .storeengine-form-row {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+	margin-bottom: 14px;
+}
+.storeengine-vendor-pm input,
+.storeengine-vendor-pm select,
+.storeengine-vendor-withdraw input {
+	padding: 8px 10px;
+	border: 1px solid #d1d5db;
+	border-radius: 4px;
+	font-size: 14px;
+}
+
+/* Withdrawal status pills (reuse vendor status colours) */
+.storeengine-vendors__status--paid {
+	background: #d1fae5;
+	color: #065f46;
+}
+.storeengine-vendors__status--rejected,
+.storeengine-vendors__status--cancelled {
+	background: #fee2e2;
+	color: #991b1b;
+}
+.storeengine-vendors__status--approved {
+	background: #dbeafe;
+	color: #1e40af;
+}
+
+/* ---------------------------------------------------------------------------
+ * Vendor order fulfilment (vendor-orders page)
+ * ------------------------------------------------------------------------ */
+.storeengine-vendor-fulfillment__intro {
+	margin: -8px 0 20px;
+	color: #6b7280;
+	font-size: 14px;
+}
+
+.storeengine-vendor-fulfillment__empty {
+	background: #fff;
+	border: 1px solid #e5e7eb;
+	border-radius: 8px;
+	padding: 24px;
+	text-align: center;
+	color: #6b7280;
+}
+
+.storeengine-vendor-fulfillment__order {
+	background: #fff;
+	border: 1px solid #e5e7eb;
+	border-radius: 8px;
+	margin-bottom: 16px;
+	overflow: hidden;
+}
+
+.storeengine-vendor-fulfillment__order-head {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	width: 100%;
+	padding: 12px 16px;
+	background: #f8fafc;
+	border: 0;
+	border-radius: 8px;
+	font-size: 14px;
+	font-family: inherit;
+	text-align: left;
+	cursor: pointer;
+}
+
+.storeengine-vendor-fulfillment__order-head:hover {
+	background: #f1f5f9;
+}
+
+/* Orders with nothing to ship (all-digital) — static row, no toggle. */
+.storeengine-vendor-fulfillment__order-head--static,
+.storeengine-vendor-fulfillment__order-head--static:hover {
+	cursor: default;
+	background: #f8fafc;
+}
+
+.storeengine-vendor-fulfillment__no-shipment-note {
+	margin-left: auto;
+	color: #94a3b8;
+	font-style: italic;
+	font-size: 13px;
+}
+
+.storeengine-vendor-fulfillment__order.is-open .storeengine-vendor-fulfillment__order-head {
+	border-bottom: 1px solid #e5e7eb;
+	border-radius: 8px 8px 0 0;
+}
+
+.storeengine-vendor-fulfillment__order-id {
+	font-weight: 700;
+	color: #0f172a;
+}
+
+.storeengine-vendor-fulfillment__order-placed {
+	color: #6b7280;
+}
+
+.storeengine-vendor-fulfillment__order-summary {
+	margin-left: auto;
+}
+
+.storeengine-vendor-fulfillment__order-count {
+	color: #6b7280;
+	font-size: 13px;
+}
+
+.storeengine-vendor-fulfillment__chevron {
+	flex: none;
+	width: 8px;
+	height: 8px;
+	border-right: 2px solid #94a3b8;
+	border-bottom: 2px solid #94a3b8;
+	transform: rotate(45deg);
+	transition: transform 0.15s ease;
+	margin-top: -3px;
+}
+
+.storeengine-vendor-fulfillment__order.is-open .storeengine-vendor-fulfillment__chevron {
+	transform: rotate(-135deg);
+	margin-top: 3px;
+}
+
+/* Collapsed by default — expand the order the vendor clicks. */
+.storeengine-vendor-fulfillment__items {
+	display: none;
+}
+
+.storeengine-vendor-fulfillment__order.is-open .storeengine-vendor-fulfillment__items {
+	display: block;
+}
+
+.storeengine-vendor-fulfillment__item {
+	padding: 14px 16px;
+	border-bottom: 1px solid #f1f5f9;
+}
+
+.storeengine-vendor-fulfillment__item:last-child {
+	border-bottom: 0;
+}
+
+.storeengine-vendor-fulfillment__item-info {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	margin-bottom: 10px;
+}
+
+.storeengine-vendor-fulfillment__item-name {
+	font-weight: 600;
+	color: #0f172a;
+}
+
+.storeengine-vendor-fulfillment__item-qty {
+	color: #6b7280;
+	font-size: 13px;
+}
+
+.storeengine-vendor-fulfillment__pill {
+	margin-left: auto;
+	padding: 3px 10px;
+	border-radius: 999px;
+	font-size: 12px;
+	font-weight: 600;
+	background: #f1f5f9;
+	color: #475569;
+	white-space: nowrap;
+}
+
+.storeengine-vendor-fulfillment__pill--shipped,
+.storeengine-vendor-fulfillment__pill--on_the_way,
+.storeengine-vendor-fulfillment__pill--out_for_delivery {
+	background: #dbeafe;
+	color: #1e40af;
+}
+
+.storeengine-vendor-fulfillment__pill--delivered {
+	background: #d1fae5;
+	color: #065f46;
+}
+
+.storeengine-vendor-fulfillment__pill--returned {
+	background: #fee2e2;
+	color: #991b1b;
+}
+
+.storeengine-vendor-fulfillment__not-shippable {
+	font-size: 13px;
+	color: #94a3b8;
+	font-style: italic;
+}
+
+.storeengine-vendor-fulfillment__form {
+	display: grid;
+	grid-template-columns: 180px 1fr 1fr;
+	gap: 10px 12px;
+	align-items: end;
+}
+
+.storeengine-vendor-fulfillment__field {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+	font-size: 12px;
+	color: #475569;
+	margin: 0;
+}
+
+.storeengine-vendor-fulfillment__field--wide {
+	grid-column: 1 / -1;
+}
+
+.storeengine-vendor-fulfillment__field select,
+.storeengine-vendor-fulfillment__field input {
+	width: 100%;
+	height: 38px;
+	padding: 0 10px;
+	border: 1px solid #d1d5db;
+	border-radius: 6px;
+	font-size: 14px;
+	background: #fff;
+}
+
+.storeengine-vendor-fulfillment__actions {
+	grid-column: 1 / -1;
+	display: flex;
+	align-items: center;
+	gap: 12px;
+}
+
+.storeengine-vendor-fulfillment__feedback {
+	font-size: 13px;
+	color: #6b7280;
+}
+
+.storeengine-vendor-fulfillment__feedback.is-success {
+	color: #059669;
+}
+
+.storeengine-vendor-fulfillment__feedback.is-error {
+	color: #dc2626;
+}
+
+@media (max-width: 640px) {
+	.storeengine-vendor-fulfillment__form {
+		grid-template-columns: 1fr;
+	}
+}

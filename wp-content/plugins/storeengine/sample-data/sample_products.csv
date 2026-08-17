@@ -1,0 +1,41 @@
+ID,Type,Name,Slug,Published,Description,"Is Hide","Shipping Type",Weight,"Weight Unit","Product Categories","Product Tags",Images
+32,simple,Unlimited,unlimited,"2025-08-10 09:59:24",,0,digital,0,g,,,
+
+"Price name","Price type",Price,"Compare price","Setup Fee","Setup Fee name","Setup Fee price","Setup Fee type",Trial,"Trial days",Expire,"Expire days","Payment duration","Payment duration type",Upgradeable,Order
+onetime,onetime,450,500,,,0,,,0,,0,0,month,,0
+
+"# Product Entity"
+30,simple,"Level &#8211; 1",level-1,"2025-08-10 09:57:41",,0,digital,0,g,,,
+
+"Price name","Price type",Price,"Compare price","Setup Fee","Setup Fee name","Setup Fee price","Setup Fee type",Trial,"Trial days",Expire,"Expire days","Payment duration","Payment duration type",Upgradeable,Order
+subscription,subscription,20,25,,,0,,,0,,0,1,week,,0
+
+"# Product Entity"
+18,variable,Hoodie,hoodie,"2025-08-10 09:14:27","<p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est. Mauris placerat eleifend leo.</p>",0,physical,200,g,"Clothing > Hoodies",,
+
+"Price name","Price type",Price,"Compare price","Setup Fee","Setup Fee name","Setup Fee price","Setup Fee type",Trial,"Trial days",Expire,"Expire days","Payment duration","Payment duration type",Upgradeable,Order
+Onetime,onetime,42,,,,0,fee,,7,,30,1,month,,0
+
+"Variation Price","Variation Image","Variation Attributes","Price Index"
+3,,"Color:Blue,Logo:No",
+3,,"Color:Blue,Logo:Yes",1
+3,,"Color:Green,Logo:No",
+,,"Color:Green,Logo:Yes",
+,,"Color:Red,Logo:No",
+,,"Color:Red,Logo:Yes",
+
+"# Product Entity"
+17,simple,Cap,cap,"2025-08-10 09:03:01","<p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est. Mauris placerat eleifend leo.</p>",0,physical,150,g,Accessories,,
+
+"Price name","Price type",Price,"Compare price","Setup Fee","Setup Fee name","Setup Fee price","Setup Fee type",Trial,"Trial days",Expire,"Expire days","Payment duration","Payment duration type",Upgradeable,Order
+Onetime,onetime,120,150,,,0,fee,,7,,30,1,month,,0
+
+"# Product Entity"
+14,simple,Album,album,"2025-08-10 08:42:14",,0,digital,0,g,Digital,"Album,digital",
+
+"Price name","Price type",Price,"Compare price","Setup Fee","Setup Fee name","Setup Fee price","Setup Fee type",Trial,"Trial days",Expire,"Expire days","Payment duration","Payment duration type",Upgradeable,Order
+Onetime,onetime,55,70,,,0,fee,,7,,30,1,month,,0
+
+"Download ID","Download Name","Download URL","Download Status"
+024baed7-b281-4b23-a268-327b062b3998,"File - 01",https://picsum.photos/800/500,1
+85540d52-ed93-41dc-8baa-aba6fb7d2cfb,"FIle - 02",https://picsum.photos/800/500,1

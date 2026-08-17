@@ -1,0 +1,21 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "storeengine/shortcode",
+	"version": "1.0.0",
+	"title": "StoreEngine Shortcode",
+	"category": "widgets",
+	"description": "Insert any StoreEngine shortcode with real editor controls — no need to hand-write it.",
+	"keywords": [ "shortcode", "storeengine", "checkout", "cart", "funnel" ],
+	"supports": {
+		"html": false,
+		"anchor": true
+	},
+	"textdomain": "storeengine",
+	"editorScript": "storeengine-blocks-editor",
+	"attributes": {
+		"shortcode": { "type": "string", "default": "" },
+		"atts": { "type": "object", "default": {} },
+		"content": { "type": "string", "default": "" }
+	}
+}

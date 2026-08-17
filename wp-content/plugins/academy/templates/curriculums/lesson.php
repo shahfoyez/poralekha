@@ -1,0 +1,112 @@
+<?php
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
+// load lesson title if it is enabled
+if ( \Academy\Helper::get_settings( 'is_enabled_lessons_content_title' ) ) {
+	\Academy\Helper::get_template( 'curriculums/lesson/title.php', [ 'lesson' => $lesson ] );
+}
+
+$status = isset( $lesson->lesson_status ) ? $lesson->lesson_status : '';// phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+if ( ! empty( $lesson_meta['video_source']['type'] ) && 'publish' === $status ) {
+	$template_path = '';
+	$template_args = [];
+
+	switch ( $lesson_meta['video_source']['type'] ) {
+		case 'youtube':
+			$template_path = 'curriculums/lesson/youtube.php';
+			$template_args = [
+				'url' => $lesson_meta['video_source']['url'],
+				'next_topic_play_url' => $next_topic_play_url,
+				'course_id' => $course_id,
+				'lesson_id' => $lesson->ID
+			];
+			break;
+
+		case 'vimeo':
+			$template_path = 'curriculums/lesson/vimeo.php';
+			$template_args = [ 'url' => $lesson_meta['video_source']['url'] ];
+			break;
+
+		case 'html5':
+			$url = wp_get_attachment_url( $lesson_meta['video_source']['id'] );
+			$template_path = 'curriculums/lesson/html5.php';
+			$template_args = [ 'url' => $url ];
+			break;
+
+		case 'external':
+			$video = $lesson_meta['video_source'];
+			// first check external URL contain html5 video or not
+			if ( \Academy\Helper::is_html5_video_link( $video['url'] ) ) {
+				$video['type'] = 'html5';
+				$embed_url = \Academy\Helper::get_basic_url_to_embed_url( $video['url'] );
+				if ( isset( $embed_url['url'] ) && ! empty( $embed_url['url'] ) ) {
+					$video['url'] = $embed_url['url'];
+				}
+			} else {
+				$video['url'] = \Academy\Helper::get_basic_url_to_embed_url( $video['url'] );
+			}
+
+			$template_path = 'curriculums/lesson/' . ( 'html5' === $video['type'] ? 'html5.php' : 'external.php' );
+			$template_args = $video['url'];
+			break;
+		case 'embedded':
+			$video = $lesson_meta['video_source'];
+			$host_url = \Academy\Helper::generate_video_embed_url( $video['url'] );
+			$path = 'external.php';// phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+			if ( $video['url'] === $host_url ) {
+				$path  = 'embedded.php';// phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+			}
+			$template_path = 'curriculums/lesson/' . $path;
+			$template_args = \Academy\Helper::get_basic_url_to_embed_url( $video['url'] );
+			break;
+		case 'short_code':
+			$short_code = \Academy\Helper::get_content_html( stripslashes( $lesson_meta['video_source']['url'] ) );
+			$template_path = 'curriculums/lesson/shortcode.php';
+			$template_args = [ 'shortcode' => $short_code ];
+			break;
+		case 'offline':
+		case 'online':
+			$template_path = 'curriculums/lesson/online.php';
+			$meta = ! empty( $lesson_meta['video_source']['url'] ) ? $lesson_meta['video_source']['url'] : \Academy\Helper::get_settings( 'lesson_offline_class_address' );
+			$template_args = [ 'meta' => $meta ];
+			break;
+		case 'gumlet':
+			if ( \Academy\Helper::get_addon_active_status( 'gumlet-video' ) && ! empty( $lesson_meta['video_source']['url'] ) ) {
+				try {
+					$token_data    = \AcademyGumletVideo\Token::generate( $lesson_meta['video_source']['url'], get_current_user_id() );
+					$template_path = 'curriculums/lesson/gumlet.php';
+					$template_args = [
+						'src'        => $token_data['signed_url'],
+						'next_lesson' => $next_topic_play_url,
+						'course_id'  => $course_id,
+						'lesson_id'  => $lesson->ID,
+					];
+				} catch ( \Throwable $e ) {
+					// Secret not configured — skip rendering.
+				}
+			}
+			break;
+	}//end switch
+
+	if ( $template_path ) {
+		\Academy\Helper::get_template( $template_path, $template_args );
+	}
+
+	// featured image
+} elseif ( 'publish' === $status && ! empty( $lesson_meta['featured_media'] ) ) {
+	\Academy\Helper::get_template( 'curriculums/lesson/featured-image.php', [ 'url' => wp_get_attachment_url( $lesson_meta['featured_media'] ) ] );
+}//end if
+
+// content
+$content = '';
+if ( 'publish' === $status ) {
+	$content = \Academy\Helper::get_content_html( stripslashes( $lesson->lesson_content ) );
+}
+\Academy\Helper::get_template( 'curriculums/lesson/content.php', [ 'content' => $content ] );
+
+// attachment
+if ( 'publish' === $status && ! empty( $lesson_meta['attachment'] ) ) {
+	\Academy\Helper::get_template( 'curriculums/lesson/attachment.php', [ 'attachment_id' => $lesson_meta['attachment'] ] );
+}

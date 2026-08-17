@@ -1,0 +1,64 @@
+<?php
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Exit if accessed directly
+}
+?>
+<div class="academy-single-course__content-item academy-single-course__content-item--instructors">
+	<?php
+	foreach ( $instructors as $instructor ) :
+		$instructor_id = isset( $instructor->ID ) ? $instructor->ID : 0;
+		$display_name = isset( $instructor->display_name ) ? $instructor->display_name : '';
+		$reviews = \Academy\Helper::get_instructor_ratings( get_the_author_meta( 'ID', $instructor_id ) );
+		?>
+	<div class="course-single-instructor">
+		<div class="instructor-info">
+			<div class="instructor-info__thumbnail">
+			<?php
+			if ( Academy\Helper::get_settings( 'is_show_public_profile' ) ) :
+				?>
+				<a href="<?php echo esc_url( get_author_posts_url( get_the_author_meta( 'ID', $instructor_id ) ) ); ?>">
+				<?php
+					// phpcs:ignore PluginCheck.CodeAnalysis.ImageFunctions.NonEnqueuedImage
+					echo '<img src="' . esc_url( get_avatar_url( $instructor_id ) ) . '" alt="' . esc_attr__( 'profile', 'academy' ) . '">'; ?>
+				</a>
+				<?php
+				else :
+					?>
+					<?php
+						// phpcs:ignore PluginCheck.CodeAnalysis.ImageFunctions.NonEnqueuedImage
+						echo '<img src="' . esc_url( get_avatar_url( $instructor_id ) ) . '" alt="' . esc_attr__( 'profile', 'academy' ) . '">'; ?>
+				<?php endif; ?>
+			</div>
+			<div class="instructor-info__content">
+				<span class="instructor-title"><?php esc_html_e( 'Instructor', 'academy' ); ?></span>
+				<h4 class="instructor-name">
+				<?php
+				if ( Academy\Helper::get_settings( 'is_show_public_profile' ) ) :
+					?>
+					<a href="<?php echo esc_url( get_author_posts_url( get_the_author_meta( 'ID', $instructor_id ) ) ); ?>">
+					<?php echo esc_html( $display_name ); ?>
+					</a>
+					<?php else : ?>
+						<?php echo esc_html( $display_name ); ?>
+					<?php endif; ?>
+				</h4>
+			</div>
+		</div>
+		<?php
+		if ( $instructor_reviews_status ) :
+			?>
+		<div class="instructor-review">
+			<span class="instructor-review__title"><?php esc_html_e( 'Reviews', 'academy' ); ?></span>
+			<span class="instructor-review__rating">
+			<?php
+			echo wp_kses_post( \Academy\Helper::star_rating_generator( $reviews->rating_avg ) );
+			?>
+				<span class="instructor-review__rating-number"><?php echo esc_html( $reviews->rating_avg ) . ' <span>(' . esc_html( $reviews->rating_count ) . ' ' . esc_html__( 'Reviews', 'academy' ) . ')</span>'; ?></span> 
+			</span>
+		</div>
+			<?php
+			endif;
+		?>
+	</div>
+	<?php endforeach; ?>
+</div>

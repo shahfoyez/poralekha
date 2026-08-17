@@ -1,0 +1,59 @@
+{
+    "$schema": "https://schemas.wp.org/trunk/block.json",
+    "apiVersion": 3,
+    "name": "ablocks/menu-child-mega",
+    "parent": [
+        "ablocks/menu-item"
+    ],
+    "version": "0.1.0",
+    "title": "Mega Menu",
+    "category": "ablocks",
+    "icon": "smiley",
+    "description": "Show Submenu",
+    "example": [],
+    "supports": {
+        "html": false,
+        "anchor": true
+    },
+    "textdomain": "ablocks",
+    "style": [],
+    "attributes": {
+        "block_id": {
+            "type": "string",
+            "default": ""
+        },
+        "width": {
+            "type": "object",
+            "default": {
+                "value": 100,
+                "valueTablet": "",
+                "valueMobile": "",
+                "valueUnit": "%",
+                "valueUnitTablet": "",
+                "valueUnitMobile": ""
+            }
+        },
+        "height": {
+            "type": "object",
+            "default": {
+                "value": "",
+                "valueTablet": "",
+                "valueMobile": "",
+                "valueUnit": "px",
+                "valueUnitTablet": "",
+                "valueUnitMobile": ""
+            }
+        },
+        "positionX": {
+            "type": "object",
+            "default": {
+                "value": 0,
+                "valueTablet": "",
+                "valueMobile": "",
+                "valueUnit": "%",
+                "valueUnitTablet": "",
+                "valueUnitMobile": ""
+            }
+        }
+    }
+}

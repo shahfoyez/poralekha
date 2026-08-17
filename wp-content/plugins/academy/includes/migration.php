@@ -1,0 +1,493 @@
+<?php
+namespace Academy;
+
+use Academy\Admin\Settings;
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
+class Migration {
+
+	public static function init() {
+		$self = new self();
+		add_action( 'admin_init', [ $self, 'run_migration' ] );
+	}
+
+	public function run_migration() {
+		$academy_version = get_option( 'academy_version' );
+
+		// Migration for addon WooCommerce
+		if ( version_compare( $academy_version, '2.0.7', '<=' ) && Helper::is_active_woocommerce() ) {
+			$saved_addons = (array) json_decode( get_option( ACADEMY_ADDONS_SETTINGS_NAME ), true );
+			$saved_addons['woocommerce'] = true;
+			update_option( ACADEMY_ADDONS_SETTINGS_NAME, wp_json_encode( $saved_addons ) );
+		}
+
+		// Version-specific migrations
+		$this->migrate_1_3_5( $academy_version );
+		$this->migrate_1_4_0( $academy_version );
+		$this->migrate_1_8_2( $academy_version );
+		$this->migrate_1_9_0( $academy_version );
+		$this->migrate_1_9_14( $academy_version );
+		$this->migrate_2_3_1( $academy_version );
+		$this->migrate_3_2_3();
+		$this->migrate_3_3_11( $academy_version );
+
+		// Quiz max question allowed
+		if ( ! get_option( 'academy_quiz_question_max_allowed' ) ) {
+			$this->migrate_3_3_2();
+		}
+
+		// Woo settings migration
+		$this->migrate_woo_settings_3_3_6();
+
+		// Save version number, flash role, and permalinks
+		if ( ACADEMY_VERSION !== $academy_version ) {
+			Settings::save_settings();
+			update_option( 'academy_version', ACADEMY_VERSION );
+			update_option( 'academy_flash_role_management', true );
+			\Academy\Helper::flush_rewrite_rules();
+			$this->loco_translate_sync();
+		}
+
+		// Flash Role
+		if ( get_option( 'academy_flash_role_management' ) ) {
+			$installer = new \Academy\Installer();
+			$installer->add_role();
+			delete_option( 'academy_flash_role_management' );
+		}
+
+		// Assign instructor role to admin if missing
+		$user = new \WP_User( get_current_user_id() );
+		if ( in_array( 'administrator', $user->roles, true ) && ! in_array( 'academy_instructor', $user->roles, true ) ) {
+			$user->add_role( 'academy_instructor' );
+		}
+
+		// Lesson Gutenberg editor support for instructor
+		if ( version_compare( $academy_version, '3.2.2', '>' ) ) {
+			$role = get_role( 'manage_academy_instructor' );
+			if ( $role ) {
+				$role->add_cap( 'edit_academy_lessons' );
+				$role->add_cap( 'edit_others_academy_lessons' );
+			}
+		}
+		// add question explanation column
+		if ( \Academy\Helper::get_addon_active_status( 'quizzes' ) && version_compare( $academy_version, '3.5.6', '<=' ) ) {
+			$this->migrate_add_question_explanation_column();
+		}
+	}
+
+	public function loco_translate_sync() : void {
+		if ( ! is_plugin_active( 'loco-translate/loco.php' ) ) {
+			return;
+		}
+
+		if ( ! wp_next_scheduled( 'academy_loco_translate_sync' ) ) {
+			wp_schedule_single_event(
+				time() + 5,
+				'academy_loco_translate_sync'
+			);
+		}
+	}
+
+	public function migrate_1_3_5( $academy_version ) {
+		if ( version_compare( $academy_version, '1.2.15', '>=' ) && version_compare( $academy_version, '1.3.5', '<' ) ) {
+			global $wpdb;
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+			$wpdb->query(
+				$wpdb->prepare(
+					"UPDATE {$wpdb->prefix}academy_lessons SET lesson_status=%s WHERE lesson_status=%s",
+					'publish',
+					'draft'
+				)
+			);
+		}
+	}
+
+	public function migrate_1_4_0( $academy_version ) {
+		$user_id = get_current_user_id();
+		if ( get_user_meta( $user_id, 'academy_is_user_migrate_completed_topics', true ) ) {
+			return;
+		}
+
+		global $wpdb;
+
+		$enrolled_course_ids = \Academy\Helper::get_enrolled_courses_ids_by_user( $user_id );
+		if ( empty( $enrolled_course_ids ) ) {
+			update_user_meta( $user_id, 'academy_is_user_migrate_completed_topics', true );
+			return;
+		}
+
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		$topic_lists = $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT meta_key, meta_value FROM $wpdb->usermeta WHERE meta_key LIKE %s AND user_id = %d",
+				'academy_completed_topic_id_%',
+				$user_id
+			)
+		);
+
+		$quiz   = [];
+		$lesson = [];
+
+		foreach ( $topic_lists as $topic_item ) {
+			$topic_id = (int) str_replace( 'academy_completed_topic_id_', '', $topic_item->meta_key );
+			if ( 'academy_quiz' === get_post_type( $topic_id ) ) {
+				$quiz[ $topic_id ] = $topic_item->meta_value;
+			} else {
+				$lesson[ $topic_id ] = $topic_item->meta_value;
+			}
+		}
+
+		if ( ! count( $quiz ) && ! count( $lesson ) ) {
+			update_user_meta( $user_id, 'academy_is_user_migrate_completed_topics', true );
+			return;
+		}
+
+		foreach ( $enrolled_course_ids as $enrolled_course_id ) {
+			$curriculums = wp_list_pluck(
+				get_post_meta( $enrolled_course_id, 'academy_course_curriculum', true ),
+				'topics'
+			);
+			$curriculums = call_user_func_array( 'array_merge', $curriculums );
+			$option_name = 'academy_course_' . $enrolled_course_id . '_completed_topics';
+			$saved_topics_lists = (array) json_decode( get_user_meta( $user_id, $option_name, true ), true );
+
+			foreach ( $curriculums as $curriculum ) {
+				if ( isset( $lesson[ $curriculum['id'] ] ) && 'lesson' === $curriculum['type'] ) {
+					if ( ! isset( $saved_topics_lists['lesson'][ $curriculum['id'] ] ) ) {
+						$saved_topics_lists['lesson'][ $curriculum['id'] ] = $lesson[ $curriculum['id'] ];
+					}
+				} elseif ( isset( $quiz[ $curriculum['id'] ] ) && 'quiz' === $curriculum['type'] ) {
+					if ( ! isset( $saved_topics_lists['quiz'][ $curriculum['id'] ] ) ) {
+						$saved_topics_lists['quiz'][ $curriculum['id'] ] = $quiz[ $curriculum['id'] ];
+					}
+				}
+			}
+
+			update_user_meta( $user_id, $option_name, wp_json_encode( $saved_topics_lists ) );
+		}//end foreach
+
+		update_user_meta( $user_id, 'academy_is_user_migrate_completed_topics', true );
+	}
+
+	public function migrate_1_9_14( $academy_version ) {
+		if ( ! get_option( 'academy_form_builder_settings' ) ) {
+			$form_settings = array(
+				'student' => [
+					[
+						'fields' => [
+							[
+								'is_required' => true,
+								'label' => __( 'Email', 'academy' ),
+								'name' => 'email',
+								'placeholder' => __( 'Enter Email Address', 'academy' ),
+								'type' => 'text'
+							],
+						],
+					],
+					[
+						'fields' => [
+							[
+								'is_required' => true,
+								'label' => __( 'Password', 'academy' ),
+								'name' => 'password',
+								'placeholder' => __( 'Enter Password', 'academy' ),
+								'type' => 'password'
+							],
+							[
+								'is_required' => true,
+								'label' => __( 'Confirm Password', 'academy' ),
+								'name' => 'confirm-password',
+								'placeholder' => __( 'Enter Confirm Password', 'academy' ),
+								'type' => 'password'
+							]
+						]
+					],
+					[
+						'fields' => [
+							[
+								'is_required' => true,
+								'label' => __( 'Register as Student', 'academy' ),
+								'name' => 'button',
+								'type' => 'button'
+							],
+						],
+					],
+				],
+				'instructor' => [
+					[
+						'fields' => [
+							[
+								'is_required' => true,
+								'label' => __( 'Email', 'academy' ),
+								'name' => 'email',
+								'placeholder' => __( 'Enter Email Address', 'academy' ),
+								'type' => 'text'
+							],
+						],
+					],
+					[
+						'fields' => [
+							[
+								'is_required' => true,
+								'label' => __( 'Password', 'academy' ),
+								'name' => 'password',
+								'placeholder' => __( 'Enter Password', 'academy' ),
+								'type' => 'password'
+							],
+							[
+								'is_required' => true,
+								'label' => __( 'Confirm Password', 'academy' ),
+								'name' => 'confirm-password',
+								'placeholder' => __( 'Enter Confirm Password', 'academy' ),
+								'type' => 'password'
+							]
+						]
+					],
+					[
+						'fields' => [
+							[
+								'is_required' => true,
+								'label' => __( 'Register as Instructor', 'academy' ),
+								'name' => 'button',
+								'type' => 'button'
+							],
+						],
+					],
+				],
+			);
+			add_option( 'academy_form_builder_settings', wp_json_encode( $form_settings ) );
+		}//end if
+	}
+
+	public function migrate_1_8_2( $academy_version ) {
+		if ( version_compare( $academy_version, '1.8.2', '<' ) ) {
+			global $wpdb;
+
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+			$course_announcements = $wpdb->get_results($wpdb->prepare(
+				"SELECT post_id, meta_value 
+				FROM {$wpdb->prefix}postmeta 
+				WHERE meta_key = %s",
+				'academy_course_announcements'
+			));
+
+			if ( is_array( $course_announcements ) ) {
+				foreach ( $course_announcements as $course_announcement ) {
+					$post_id = (int) $course_announcement->post_id;
+					$post_title = get_the_title( $post_id );
+					$announcements = maybe_unserialize( $course_announcement->meta_value );
+					if ( is_array( $announcements ) && count( $announcements ) ) {
+						foreach ( $announcements as $announcement ) {
+							if ( empty( $announcement['title'] ) || \Academy\Helper::get_page_by_title( $announcement['title'], 'academy_announcement' ) ) {
+								continue;
+							}
+
+							$inserted_announcement_id = wp_insert_post(
+								array(
+									'post_title' => $announcement['title'],
+									'post_type' => 'academy_announcement',
+									'post_status' => 'publish',
+									'post_content' => '<!-- wp:paragraph --><p>' . $announcement['content'] . '</p><!-- /wp:paragraph -->'
+								)
+							);
+							$announcements_course_ids = array(
+								array(
+									'label' => $post_title,
+									'value' => $post_id
+								)
+							);
+							update_post_meta( $inserted_announcement_id, 'academy_announcements_course_ids', $announcements_course_ids );
+						}//end foreach
+					}//end if
+				}//end foreach
+			}//end if
+		}//end if
+	}
+
+	public function migrate_1_9_0( $academy_version ) {
+		if ( version_compare( $academy_version, '1.9.0', '<' ) ) {
+			$course_archive_filters = \Academy\Helper::get_customizer_settings(
+				'archive_course_filters',
+				array(
+					'items' =>
+						array(
+							'search'   => 1,
+							'category' => 1,
+							'tags'     => 1,
+							'levels'   => 1,
+							'type'     => 1,
+						),
+				)
+			);
+
+			$course_archive_filters = $course_archive_filters['items'];
+			$course_archive_filters = array_reduce(array_keys( $course_archive_filters ), function ( $carry, $key ) use ( $course_archive_filters ) {
+				$carry[] = [ $key => $course_archive_filters[ $key ] ];
+				return $carry;
+			}, []);
+
+			$is_enabled_course_wishlist = false;
+			if ( (bool) \Academy\Helper::get_customizer_settings( 'course_wishlists_status' ) || \Academy\Helper::get_customizer_settings( 'single_course_wishlists_status' ) ) {
+				$is_enabled_course_wishlist = true;
+			}
+
+			$is_enabled_course_review = false;
+			if (
+				(bool) \Academy\Helper::get_customizer_settings( 'course_reviews_status' ) ||
+				(bool) \Academy\Helper::get_customizer_settings( 'single_course_student_reviews_status' )
+			) {
+				$is_enabled_course_review = true;
+			}
+
+			$is_enabled_course_share = false;
+			if ( (bool) \Academy\Helper::get_customizer_settings( 'single_course_share_status' ) || \Academy\Helper::get_customizer_settings( 'single_course_share_status' ) ) {
+				$is_enabled_course_share = true;
+			}
+
+			\Academy\Admin\Settings::save_settings( array(
+				'course_archive_sidebar_position' => \Academy\Helper::get_customizer_settings( 'archive_course_sidebar' ),
+				'archive_course_filters' => $course_archive_filters,
+				'course_archive_courses_per_row' => \Academy\Helper::get_customizer_settings( 'course_per_row' ),
+				'course_archive_courses_per_page' => \Academy\Helper::get_customizer_settings( 'course_per_page' ),
+				'is_enabled_course_share' => $is_enabled_course_share,
+				'is_enabled_course_wishlist' => $is_enabled_course_wishlist,
+				'is_enabled_course_review' => $is_enabled_course_review,
+				'is_enabled_instructor_review' => \Academy\Helper::get_customizer_settings( 'single_course_instructor_reviews_status' ),
+				'is_enabled_course_single_enroll_count' => \Academy\Helper::get_customizer_settings( 'single_course_enroll_count_status' ),
+				'is_opened_course_single_first_topic' => \Academy\Helper::get_customizer_settings( 'single_course_topics_first_item_open_status' ),
+			) );
+		}//end if
+	}
+
+	public function migrate_2_0_0( $academy_version ) {
+		global $wpdb;
+		if ( ! get_option( 'academy_is_migrate_lessons_slug' ) ) {
+			// Lesson name issue solved
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+			$existing_lessons = $wpdb->get_results( "SELECT ID, lesson_title FROM {$wpdb->prefix}academy_lessons WHERE lesson_name IS NULL OR lesson_name = ''" );
+			if ( count( $existing_lessons ) ) {
+				foreach ( $existing_lessons as $lesson ) {
+					$slug = Helper::generate_unique_lesson_slug( sanitize_title( $lesson->lesson_title ) );
+					// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+					$wpdb->update( "{$wpdb->prefix}academy_lessons", array( 'lesson_name' => $slug ), array( 'ID' => $lesson->ID ) );
+				}
+			}
+			add_option( 'academy_is_migrate_lessons_slug', true );
+			return;
+		}
+	}
+
+	public function migrate_2_3_1( $academy_version ) {
+		if ( version_compare( $academy_version, '2.3.0', '<' ) ) {
+			// Enable WooCommerce Addon
+			$saved_addons = (array) json_decode( get_option( ACADEMY_ADDONS_SETTINGS_NAME ), true );
+			$saved_addons['course-preview'] = true;
+			update_option( ACADEMY_ADDONS_SETTINGS_NAME, wp_json_encode( $saved_addons ) );
+		}
+	}
+
+	public function migrate_3_2_3() {
+		if ( ! \Academy\Helper::get_addon_active_status( 'quizzes' ) ) {
+			return;
+		}
+		if ( ! get_option( 'academy_quiz_questions_migrate_3_2_3' ) ) {
+			global $wpdb;
+			$table_name = esc_sql( $wpdb->prefix . ACADEMY_PLUGIN_SLUG . '_quiz_questions' );
+			// Check if the column exists
+			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+			$column_exists = $wpdb->get_results( "SHOW COLUMNS FROM `$table_name` LIKE 'question_negative_score'" );
+
+			if ( empty( $column_exists ) ) {
+				// Add the new column
+				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange
+				$wpdb->query( "ALTER TABLE `$table_name` ADD `question_negative_score` DECIMAL(9,2) UNSIGNED NULL DEFAULT 0.00 AFTER `question_score`" );
+			}
+			update_option( 'academy_quiz_questions_migrate_3_2_3', true );
+		}
+	}
+
+	public function migrate_3_3_11( $academy_version ) {
+		if ( ! \Academy\Helper::get_addon_active_status( 'quizzes' ) || version_compare( $academy_version, '3.4.0', '<' ) ) {
+			return;
+		}
+
+		global $wpdb;
+
+		$table_name = esc_sql( $wpdb->prefix . ACADEMY_PLUGIN_SLUG . '_quiz_questions' );
+
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		$column_exists = $wpdb->get_results( "SHOW COLUMNS FROM `$table_name` LIKE 'question_image_id'" );
+		// Add column if missing
+		if ( ! $column_exists ) {
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange
+			$wpdb->query(
+				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+				"ALTER TABLE `{$table_name}`
+				ADD `question_image_id` BIGINT(20) UNSIGNED NULL DEFAULT NULL
+				AFTER `question_negative_score`"
+			); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+		}
+	}
+
+	public function migrate_woo_settings_3_3_6() {
+		// check WooCommerce engine
+		if ( ! get_option( 'academy_store_dashboard_inside_link_migrate' ) && 'woocommerce' === \Academy\Helper::get_settings( 'monetization_engine' ) ) {
+			$woo_label = \Academy\Helper::get_settings( 'woo_dashboard_fd_link_label' );
+			$woo_label_status = \Academy\Helper::get_settings( 'is_enabled_fd_link_inside_woo_dashboard' );
+			$GLOBALS['academy_settings']->store_link_label_inside_frontend_dashboard = $woo_label;
+			$GLOBALS['academy_settings']->store_link_inside_frontend_dashboard = $woo_label_status;
+			update_option( ACADEMY_SETTINGS_NAME, wp_json_encode( $GLOBALS['academy_settings'] ) );
+			add_option( 'academy_store_dashboard_inside_link_migrate', true );
+		}
+	}
+
+	public function migrate_3_3_2() {
+		global $wpdb;
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		$wpdb->query(
+			$wpdb->prepare(
+				"UPDATE {$wpdb->postmeta} pm
+				INNER JOIN {$wpdb->posts} p ON p.ID = pm.post_id
+				SET pm.meta_value = %d
+				WHERE p.post_type = %s
+				AND pm.meta_key = %s
+				AND CAST(pm.meta_value AS UNSIGNED) > %d",
+				0,
+				'academy_quiz',
+				'academy_quiz_max_attempts_allowed',
+				0
+			)
+		);
+		add_option( 'academy_quiz_question_max_allowed', true );
+	}
+
+	public function migrate_add_question_explanation_column() {
+		global $wpdb;
+
+		$table_name = esc_sql( $wpdb->prefix . 'academy_quiz_questions' );
+
+		// Check if column exists
+		// phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		$column_exists = $wpdb->get_results(
+			$wpdb->prepare(
+				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+				"SHOW COLUMNS FROM `$table_name` LIKE %s",
+				'question_explanation'
+			)
+		);
+
+		// If column does not exist → add it
+		if ( empty( $column_exists ) ) {
+			// phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange
+			$wpdb->query(
+				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+				"ALTER TABLE `$table_name`
+				ADD `question_explanation` LONGTEXT NULL
+				AFTER `question_content`"
+			);
+		}
+	}
+}

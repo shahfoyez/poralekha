@@ -1,0 +1,154 @@
+<?php
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+$topic['type'] = 'quiz';
+$topic['slug'] = get_query_var( 'name' );
+?>
+<div class="academy-quiz-attempt-answer-details">
+	<h3 class="academy-quiz-attempt-entry-title-details">
+		<?php echo esc_html__( 'Attempt Answer Details', 'academy' ); ?>
+	</h3>
+	<div class="academy-list-wrap academy-dashboard__content">
+		<div class="academy-quiz-table-wrapper">
+			<div class="academy-list-wrap academy-dashboard__content">
+				<div class="academy-table academy-table--quiz-result-answer-details ">
+					<div class="academy-table__container">
+						<div class="academy-table__table academy-table--has-slider">
+							<div class="academy-table__head">
+								<div class="academy-table__head-row">
+									<div class="academy-table__row-cell academy-table__header-row-cell">
+									<?php echo esc_html__( 'No', 'academy' ); ?>
+									</div>
+									<div class="academy-table__row-cell academy-table__header-row-cell">
+										<?php echo esc_html__( 'Type', 'academy' ); ?>
+									</div>
+									<div class="academy-table__row-cell academy-table__header-row-cell">
+										<?php echo esc_html__( 'Question', 'academy' ); ?>
+									</div>
+									<div class="academy-table__row-cell academy-table__header-row-cell">
+										<?php echo esc_html__( 'Correct Answer', 'academy' ); ?>
+									</div>
+									<div class="academy-table__row-cell academy-table__header-row-cell">
+										<?php echo esc_html__( 'Given Answer', 'academy' ); ?>
+									</div>
+									<div class="academy-table__row-cell academy-table__header-row-cell">
+										<?php echo esc_html__( 'Answer', 'academy' ); ?>
+									</div>
+								</div>
+							</div>
+							<div class="academy-table__body">
+								<?php
+								$attempt_answer_details = is_array( $attempt_answer_details ?? null ) ? $attempt_answer_details : [];
+								$count               = 0;
+								$first_detail        = reset( $attempt_answer_details );
+								$quiz_id             = $first_detail ? (int) $first_detail->quiz_id : 0;
+								$explanation_enabled = $quiz_id ? (bool) get_post_meta( $quiz_id, 'academy_quiz_explanation_enabled', true ) : false;
+								foreach ( $attempt_answer_details as $attempt_answer_detail ) :
+									$count ++;
+									$question_type = $attempt_answer_detail->question_type;
+									?>
+									<div class="academy-table__body-row">
+										<div class="academy-table__row-cell">
+											<?php echo esc_html( $count ); ?>
+										</div>
+										<div class="academy-table__row-cell">
+											<?php
+											echo esc_html( \Academy\Helper::convert_camel_case_to_words( $question_type ) );
+											?>
+										</div>
+										<div class="academy-table__row-cell">
+											<?php echo esc_html( $attempt_answer_detail->question_title ); ?>
+										</div>
+										<div class="academy-table__row-cell">
+											<?php
+											foreach ( $attempt_answer_detail->correct_answer as $correct ) :
+												echo is_array( $correct ) ? esc_html( $correct['answer_title'] ) : esc_html( $correct->answer_title ?? $correct );
+												if ( isset( $correct->image_url ) ) : ?>
+													<div class="academy-quiz-table-answers-item">
+
+														<?php
+
+														// phpcs:ignore PluginCheck.CodeAnalysis.ImageFunctions.NonEnqueuedImage
+														echo '<img src="' . esc_url( $correct->image_url ) . '" width="50" class="academy-quiz-table-answers-item" alt="' . esc_attr( $correct->answer_title ) . '">'; ?>
+
+
+													</div>
+												<?php elseif ( is_array( $correct ) && ! empty( $correct['image_url'] ) ) : ?>
+													<div class="academy-quiz-table-answers-item">
+														<?php
+
+														// phpcs:ignore PluginCheck.CodeAnalysis.ImageFunctions.NonEnqueuedImage
+														echo '<img src="' . esc_url( $correct['image_url'] ) . '" width="50" class="academy-quiz-table-answers-item" alt="' . esc_attr( $correct['answer_title'] ) . '">'; ?>
+													</div>
+												<?php endif;
+											endforeach; ?>
+										</div>
+										<div class="academy-table__row-cell">
+											<?php
+											foreach ( $attempt_answer_detail->given_answer as $given ) :
+												if ( isset( $given->image_url ) ) : ?>
+													<div class="academy-quiz-table-answers-item">
+														<?php
+														// phpcs:ignore PluginCheck.CodeAnalysis.ImageFunctions.NonEnqueuedImage
+														echo '<img src="' . esc_url( $given->image_url ) . '" width="50" class="academy-quiz-table-answers-item" alt="' . esc_attr( $given->answer_title ) . '">'; ?>
+													</div>
+
+												<?php elseif ( is_array( $given ) && ! empty( $given['image_url'] ) ) : ?>
+													<div class="academy-quiz-table-answers-item">
+														<?php
+														// phpcs:ignore PluginCheck.CodeAnalysis.ImageFunctions.NonEnqueuedImage
+														echo '<img src="' . esc_url( $given['image_url'] ) . '" width="50" class="academy-quiz-table-answers-item" alt="' . esc_attr( $given['answer_title'] ) . '">'; ?>
+													</div>
+
+												<?php endif;
+
+												echo is_array( $given ) ? esc_html( $given['answer_title'] ) : esc_html( $given->answer_title );
+											endforeach;
+											?>
+										</div>
+										<div class="academy-table__row-cell">
+											<?php if ( $attempt_answer_detail->is_correct ) : ?>
+												<span class="academy-passed">
+													<?php echo esc_html__( 'Correct', 'academy' ); ?>
+												</span>
+											<?php elseif ( $attempt_answer_detail->is_skipped_question ) : ?>
+												<span class="academy-skipped">
+													<?php echo esc_html__( 'Skipped', 'academy' ); ?>
+												</span>
+											<?php else : ?>
+												<span class="academy-failed">
+													<?php echo esc_html__( 'Incorrect', 'academy' ); ?>
+												</span>
+											<?php endif; ?>
+										</div>
+									</div>
+									<?php if ( $explanation_enabled && ! empty( $attempt_answer_detail->question_explanation ) ) : ?>
+										<div class="academy-quiz-attempt-explanation">
+											<?php // translators: %d is the question number. ?>
+											<strong><?php echo esc_html( sprintf( __( 'Q%d Explanation:', 'academy' ), $count ) ); ?></strong>
+											<?php echo wp_kses_post( $attempt_answer_detail->question_explanation ); ?>
+										</div>
+									<?php endif; ?>
+								<?php endforeach; ?>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="academy-quiz-attempt-feedback">
+		<h3 class="academy-quiz-attempt-entry-title">
+			<?php esc_html_e( 'Instructor Feedback', 'academy' ); ?>
+		</h3>
+		<p class="academy-quiz-attempt-feedback__message">
+			<?php echo wp_kses_post( $instructor_feedback ?? '' ); ?>
+		</p>
+	</div>
+	<a class="academy-btn academy-btn--md academy-btn--preset-purple" href="<?php echo esc_url( \Academy\Helper::get_topic_play_link( $topic ) ); ?>">
+		<?php
+			esc_html_e( 'Back', 'academy' );
+		?>
+	</a>
+</div>

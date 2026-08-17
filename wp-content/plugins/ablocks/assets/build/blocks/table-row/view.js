@@ -1,0 +1,1 @@
+document.addEventListener("DOMContentLoaded",function(){document.querySelectorAll(".ablocks-block--table-body").forEach(o=>{o.querySelectorAll(".ablocks-block--table-row").forEach((o,e)=>{e%2==0?o.classList.add("ablocks-table-row--even"):o.classList.add("ablocks-table-row--odd")})})});

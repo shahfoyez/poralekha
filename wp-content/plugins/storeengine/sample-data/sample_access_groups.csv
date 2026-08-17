@@ -1,0 +1,22 @@
+"Access Group Name","Unauthorized Access Message","Protected Content Type","Specific Content Items","Excluded Content Items","Downloadable files","Enable Redirect URL","Redirect URL","Enable Access Group Expiration","Expiration Date type","Expiration Relative Date","Expiration Specific Date","User Role Sync",Priority
+Unlimited,"This content is restricted","All Posts",,,,,,,,0,,subscriber,
+
+"Product name","Product slug","Price name","Price type",Price,"Compare price","Setup Fee","Setup Fee name","Setup Fee price","Setup Fee type",Trial,"Trial days",Expire,"Expire days","Payment duration","Payment duration type",Upgradeable,Order
+Unlimited,unlimited,onetime,onetime,450,500,,,0,,,0,,0,0,month,,0
+
+"Feature Icon","Feature Label"
+filled-checkmark,"Feature - 1"
+filled-checkmark,"Feature - 2"
+filled-checkmark,"Feature - 3"
+filled-checkmark,"Feature - 4"
+
+"# Access Group Entity"
+"Level &#8211; 1","This content is restricted","Specific Posts/ Pages/ Taxonomies","hello-world,lorem-ipsum-dolor-sit-amet-consectetur-adipiscing",,,,,,,0,,subscriber,
+
+"Product name","Product slug","Price name","Price type",Price,"Compare price","Setup Fee","Setup Fee name","Setup Fee price","Setup Fee type",Trial,"Trial days",Expire,"Expire days","Payment duration","Payment duration type",Upgradeable,Order
+"Level &#8211; 1",level-1,subscription,subscription,20,25,,,0,,,0,,0,1,week,,0
+
+"Feature Icon","Feature Label"
+filled-checkmark,"Feature - 1"
+filled-checkmark,"Feature - 2"
+stoke-close,"Not available"

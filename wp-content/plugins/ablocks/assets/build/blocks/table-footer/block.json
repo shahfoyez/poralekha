@@ -1,0 +1,24 @@
+{
+    "$schema": "https://schemas.wp.org/trunk/block.json",
+    "apiVersion": 3,
+    "name": "ablocks/table-footer",
+    "version": "0.1.0",
+    "title": "Tablet Footer",
+    "category": "ablocks",
+    "description": "Create a fully customizable, responsive table. Supports multiple rows and columns",
+    "example": [],
+    "parent": [
+        "ablocks/table"
+    ],
+    "supports": {
+        "html": true,
+        "anchor": true
+    },
+    "textdomain": "ablocks",
+    "attributes": {
+        "block_id": {
+            "type": "string",
+            "default": ""
+        }
+    }
+}

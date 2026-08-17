@@ -1,0 +1,28 @@
+{
+    "$schema": "https://schemas.wp.org/trunk/block.json",
+    "apiVersion": 3,
+    "name": "ablocks/flip-box-child",
+    "version": "0.1.0",
+    "title": "Flip Box child",
+    "category": "ablocks",
+    "description": "Engaging content flip effect",
+    "example": [],
+    "supports": {
+        "html": true,
+        "anchor": true
+    },
+    "parent": [
+        "ablocks/flip-box"
+    ],
+    "textdomain": "ablocks",
+    "attributes": {
+        "block_id": {
+            "type": "string",
+            "default": ""
+        },
+        "childId": {
+            "type": "number",
+            "default": 0
+        }
+    }
+}

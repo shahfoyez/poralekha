@@ -1,0 +1,85 @@
+/* EU VAT field styles */
+
+.storeengine-eu-vat-row {
+	margin-top: 0.75rem;
+}
+
+.storeengine-eu-vat-row .storeengine-form__inner {
+	width: 100%;
+}
+
+.storeengine-eu-vat-status {
+	margin-top: 0.5rem;
+	padding: 0.5rem 0.75rem;
+	font-size: 0.875rem;
+	border-radius: 3px;
+	border: 1px solid transparent;
+	min-height: 0;
+	transition: all 120ms ease-out;
+}
+
+.storeengine-eu-vat-status:empty {
+	display: none;
+}
+
+.storeengine-eu-vat-status.is-validating {
+	background: #fff8e1;
+	border-color: #ffe082;
+	color: #6d4c00;
+}
+
+.storeengine-eu-vat-status.is-valid {
+	background: #e8f5e9;
+	border-color: #a5d6a7;
+	color: #1b5e20;
+}
+
+.storeengine-eu-vat-status.is-invalid {
+	background: #ffebee;
+	border-color: #ef9a9a;
+	color: #b71c1c;
+}
+
+.storeengine-eu-vat-status.is-failed {
+	background: #eceff1;
+	border-color: #b0bec5;
+	color: #37474f;
+}
+
+.storeengine-eu-vat-account-row {
+	margin: 1rem 0;
+	padding: 0.75rem 1rem;
+	background: #fafafa;
+	border: 1px solid #e0e0e0;
+	border-radius: 3px;
+}
+
+.storeengine-eu-vat-account-row strong {
+	display: block;
+	font-size: 0.875rem;
+	color: #555;
+	margin-bottom: 0.25rem;
+}
+
+.storeengine-order-vat-line {
+	margin-top: 0.5rem;
+	font-size: 0.95em;
+}
+
+.storeengine-order-vat-exempt {
+	margin-left: 0.5rem;
+	color: #1b5e20;
+	font-size: 0.85em;
+}
+
+/* Admin order editor VAT card */
+.storeengine-eu-vat-order__input {
+	width: 100%;
+	margin-top: 8px;
+}
+
+.storeengine-eu-vat-order__status {
+	margin-top: 0.5rem;
+	font-size: 0.85em;
+	color: #1b5e20;
+}
