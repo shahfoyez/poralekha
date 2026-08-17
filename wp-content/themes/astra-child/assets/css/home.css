@@ -49,13 +49,13 @@
 
 .rs-quote{ width:44px; height:24px; fill:#e3e6ea; flex-shrink:0; }
 
-.rs-text {
+.rs-text{
     font-size: 16px;
     line-height: 1.6;
-    color: #64748B;
+    color: var(--text-primary);
     margin: 0 0 22px;
     flex: 1;
-    font-family: 'Source Sans Pro';
+    font-family: 'Source Sans Pro', serif;
 }
 
 .rs-person{ display:flex; align-items:center; gap:14px; }
@@ -71,7 +71,7 @@
     color: var(--navy);
     font-size: 18px;
     margin: 0 0 2px;
-    font-family: "Source sans pro";
+    font-family: "Source sans pro", serif;
 }
 .rs-role {
     font-style: italic;

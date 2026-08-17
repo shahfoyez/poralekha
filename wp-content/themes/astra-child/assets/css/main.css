@@ -1,10 +1,17 @@
 /*colors*/
-/*button: #0163CB;*/
+/*navy: #0163CB;*/
 /*primary-text: #263C55;*/
 /*secondary-text: #0063BE;*/
 /*normal-text: #373737;*/
 /*muted: #627C89;*/
 
+:root{
+    --gold: #FFC34F;
+    --navy: #0163CB;
+    --text-primary: #373737;
+    --text-secondary: #263C55;
+    --text-muted: #64748B;
+}
 
 
 .academy-courses__sidebar {
